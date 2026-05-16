@@ -1,17 +1,18 @@
 services:
+ 
   db:
     image: mysql:8.4
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE:      ${DB_NAME}
+      MYSQL_USER:          ${DB_USER}
+      MYSQL_PASSWORD:      ${DB_PASSWORD}
+    expose:
+      - "3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - skillpulse
     healthcheck:
@@ -20,38 +21,71 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-    
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+ 
   backend:
     image: ${DOCKERHUB_USERNAME}/skillpulse-backend:latest
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - skillpulse
+    expose:
+      - "8080"
     environment:
-      DB_HOST: db
-      DB_PORT: "3306"
-      DB_USER: ${DB_USER}
+      DB_HOST:     db
+      DB_PORT:     "3306"
+      DB_USER:     ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      PORT: "8080"
-  
+      DB_NAME:     ${DB_NAME}
+      PORT:        "8080"
+      GIN_MODE:    release
     depends_on:
       db:
         condition: service_healthy
-
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL              
+    read_only: true      
+    tmpfs:
+      - /tmp:size=10m,mode=1777
+ 
   frontend:
     image: ${DOCKERHUB_USERNAME}/skillpulse-frontend:latest
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - skillpulse
     ports:
-      - "8080:8080"
+      - "8080:8080" 
     depends_on:
       - backend
-
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=10m,mode=1777
+      - /var/cache/nginx:size=20m
+      - /var/run:size=1m
+ 
 volumes:
   mysql_data:
-
+    driver: local
+ 
 networks:
   skillpulse:
+    driver: bridge
