@@ -43,16 +43,21 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true
   ignoreDifferences:
+    - group: "apps"
+      kind: "Deployment"
+      jsonPointers:
+        - /status/terminatingReplicas
     - group: "apps"
       kind: "StatefulSet"
       jsonPointers:
         - /status/terminatingReplicas
     - group: "apps"
-      kind: "Deployment"
+      kind: "ReplicaSet"
       jsonPointers:
         - /status/terminatingReplicas
-    - group: ""
-      kind: "Service"
+    - group: "apps"
+      kind: "DaemonSet"
       jsonPointers:
         - /status/terminatingReplicas
