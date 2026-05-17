@@ -51,30 +51,30 @@ git push
     │
     ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   GitHub Actions CI  (~54s)                  │
+│                   GitHub Actions CI  (~54s)                 |
 │                                                             │
 │  ┌──────────────────────────────┐  ┌─────────────────────┐  │
-│  │      Security Gate           │  │    govulncheck       │  │
-│  │  Gitleaks (secrets)          │  │  Go CVE audit on     │  │
-│  │  Hadolint (backend Docker)   │  │  entire module graph │  │
+│  │      Security Gate           │  │    govulncheck      │  |
+│  │  Gitleaks (secrets)          │  │  Go CVE audit on    │  │
+│  │  Hadolint (backend Docker)   │  │  entire module graph│  │
 │  │  Hadolint (frontend Docker)  │  │                     │  │
 │  └──────────────┬───────────────┘  └─────────────────────┘  │
-│                 │ (parallel)                                  │
-│        ┌────────┴────────┐                                   │
-│        ▼                 ▼                                    │
-│  Build Backend      Build Frontend                           │
+│                 │ (parallel)                                │
+│        ┌────────┴────────┐                                  │
+│        ▼                 ▼                                  │
+│  Build Backend      Build Frontend                          │
 │  (cache hit: ~5s)   (cache hit: ~5s)                        │
-│  push sha-<commit>  push sha-<commit>                        │
-│        │                 │                                    │
-│        ▼                 ▼                                    │
-│  Trivy Backend      Trivy Frontend                           │
-│  (CVE scan)         (CVE scan)                               │
-│  blocks CRITICAL    blocks CRITICAL                          │
+│  push sha-<commit>  push sha-<commit>                       │
+│        │                 │                                  │
+│        ▼                 ▼                                  │
+│  Trivy Backend      Trivy Frontend                          │
+│  (CVE scan)         (CVE scan)                              │
+│  blocks CRITICAL    blocks CRITICAL                         │
 └─────────────────────────────────────────────────────────────┘
     │
     ▼ workflow_run: success
 ┌─────────────────────────────────────────────────────────────┐
-│               GitHub Actions CD  (~8s)                       │
+│               GitHub Actions CD  (~8s)                      │
 │  sed: image tag → sha-<commit> in k8s/20-backend.yaml       │
 │  sed: image tag → sha-<commit> in k8s/30-frontend.yaml      │
 │  git commit "deploy: pin backend+frontend to sha-<commit>"  │
@@ -83,7 +83,7 @@ git push
     │
     ▼ webhook (instant — no 3-min poll)
 ┌─────────────────────────────────────────────────────────────┐
-│                   Argo CD on EC2                             │
+│                   Argo CD on EC2                            │
 │  Detects new commit in k8s/ → kubectl apply                 │
 │  Rolling update: new pods up before old pods down           │
 │  selfHeal: true — manual edits reverted automatically       │
