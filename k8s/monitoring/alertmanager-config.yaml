@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: alertmanager-kube-prometheus-stack-alertmanager
+  name: alertmanager-monitoring-kube-prometheus-alertmanager
   namespace: monitoring
 stringData:
   alertmanager.yaml: |
