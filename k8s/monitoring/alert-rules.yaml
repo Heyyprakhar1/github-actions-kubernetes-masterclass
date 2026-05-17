@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: skillpulse-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: skillpulse
+    rules:
+    - alert: PodDown
+      expr: up{namespace="skillpulse"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        description: "Pod {{ $labels.pod }} in skillpulse is down"
+    - alert: HighMemoryUsage
+      expr: container_memory_usage_bytes{namespace="skillpulse"} > 100000000
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        description: "Pod {{ $labels.pod }} memory usage is high"
+    - alert: PodRestarting
+      expr: rate(kube_pod_container_status_restarts_total{namespace="skillpulse"}[5m]) > 0
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        description: "Pod {{ $labels.pod }} is restarting frequently"
