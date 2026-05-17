@@ -388,6 +388,57 @@ Same app. Same pipeline shape. Different runtime — and a lot more power.
 
 ---
 
+Observability
+The cluster runs a full observability stack — metrics, logs, and dashboards — all deployed via Argo CD alongside the app.
+
+Metrics — kube-prometheus-stack
+
+Deployed via Argo CD (kube-prometheus-stack v65.1.1). Argo CD pulls the chart from the Prometheus community repo and keeps it synced — no manual Helm commands needed. Includes Prometheus, Alertmanager, Node Exporter, and kube-state-metrics out of the box.
+
+What it scrapes:
+
+App pods — CPU, memory, network per container in the skillpulse namespace
+Node Exporter — EC2 host metrics: disk I/O, CPU cores, RAM, network interfaces (runs as a DaemonSet)
+kube-state-metrics — Kubernetes object state: pod phase, HPA replica counts, deployment rollout status
+
+Access Grafana (port-forward or direct):
+|------------------------------------------------------------------------------------------|
+| bashkubectl port-forward svc/monitoring-grafana -n monitoring 3000:80 --address 0.0.0.0  |
+|------------------------------------------------------------------------------------------|
+
+# open http://<EC2-IP>:3000
+
+Useful dashboards already loaded:
+
+Kubernetes / Compute Resources / Cluster — namespace-level CPU + memory breakdown
+Kubernetes / Compute Resources / Namespace — filter to skillpulse, see per-pod usage
+Node Exporter / Nodes — EC2 host health
+
+Logs — Loki + Promtail
+
+Deployed via Argo CD (loki-stack v2.10.2). Same pattern — Argo CD watches the Grafana Helm repo and syncs it to the cluster automatically. Promtail runs as a DaemonSet and tails /var/log/pods/ on the node — every container's stdout/stderr gets shipped to Loki automatically, no app-side changes needed.
+
+Query logs in Grafana → Explore → Loki datasource:
+|-----------------------------------------------------------------------|
+|{namespace="skillpulse"}                          # all app logs       |
+|{namespace="skillpulse", container="backend"}     # Go backend only    |
+|{namespace="skillpulse"} |= "ERROR"              # filter errors       |
+|-----------------------------------------------------------------------|
+
+How it's wired
+
+App pods (skillpulse ns)
+    │
+    ├── stdout/stderr ──► Promtail (DaemonSet) ──► Loki ──────────────┐
+    │                                                                   │
+    └── /metrics endpoint ──► Prometheus ◄── Node Exporter             │
+                                    │         kube-state-metrics        │
+                                    │                                   ▼
+                                    └───────────────────────────► Grafana :3000
+All three Argo CD apps (skillpulse, monitoring, loki-stack) stay Healthy + Synced — any change to the Helm values or app manifests in the repo gets picked up automatically.
+
+---
+
 ## Screenshots
 
 ### CI Pipeline — parallel job graph
