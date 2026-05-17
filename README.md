@@ -388,10 +388,10 @@ Same app. Same pipeline shape. Different runtime — and a lot more power.
 
 ---
 
-Observability
+## Observability
 The cluster runs a full observability stack — metrics, logs, and dashboards — all deployed via Argo CD alongside the app.
 
-Metrics — kube-prometheus-stack
+### Metrics — kube-prometheus-stack
 
 Deployed via Argo CD (kube-prometheus-stack v65.1.1). Argo CD pulls the chart from the Prometheus community repo and keeps it synced — no manual Helm commands needed. Includes Prometheus, Alertmanager, Node Exporter, and kube-state-metrics out of the box.
 
@@ -414,7 +414,7 @@ Kubernetes / Compute Resources / Cluster — namespace-level CPU + memory breakd
 Kubernetes / Compute Resources / Namespace — filter to skillpulse, see per-pod usage
 Node Exporter / Nodes — EC2 host health
 
-Logs — Loki + Promtail
+### Logs — Loki + Promtail
 
 Deployed via Argo CD (loki-stack v2.10.2). Same pattern — Argo CD watches the Grafana Helm repo and syncs it to the cluster automatically. Promtail runs as a DaemonSet and tails /var/log/pods/ on the node — every container's stdout/stderr gets shipped to Loki automatically, no app-side changes needed.
 
