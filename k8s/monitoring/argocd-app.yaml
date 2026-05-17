@@ -48,3 +48,11 @@ spec:
       kind: "StatefulSet"
       jsonPointers:
         - /status/terminatingReplicas
+    - group: "apps"
+      kind: "Deployment"
+      jsonPointers:
+        - /status/terminatingReplicas
+    - group: ""
+      kind: "Service"
+      jsonPointers:
+        - /status/terminatingReplicas
