@@ -21,7 +21,7 @@ spec:
               memory: 512Mi
               cpu: 200m
         promtail:
-          enabled: true
+          enabled: false
           resources:
             requests:
               memory: 128Mi
