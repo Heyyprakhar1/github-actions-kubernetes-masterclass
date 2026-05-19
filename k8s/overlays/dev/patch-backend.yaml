@@ -4,3 +4,8 @@ metadata:
   name: backend
 spec:
   replicas: 1
+  template:
+    spec:
+      containers:
+        - name: backend
+          image: heyyprakhar1/skillpulse-backend:latest

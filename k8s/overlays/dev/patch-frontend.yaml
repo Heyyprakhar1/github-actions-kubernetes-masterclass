@@ -4,3 +4,8 @@ metadata:
   name: frontend
 spec:
   replicas: 1
+  template:
+    spec:
+      containers:
+        - name: frontend
+          image: heyyprakhar1/skillpulse-frontend:latest
