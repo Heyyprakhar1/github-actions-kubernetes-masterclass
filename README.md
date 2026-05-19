@@ -36,10 +36,10 @@ This repo is the working artifact for the **TrainWithShubham GitHub Actions & Ku
   DEVELOPER                SOURCE OF TRUTH               CI RUNTIME (GitHub-hosted)
   ──────────               ───────────────               ──────────────────────────
   ┌─────────┐   git push   ┌───────────────────────┐    ┌──────────────────────────────────────┐
-  │  Local  │─────────────▶│   GitHub Repository   │───▶│      ci.yml  (on: push: main)        │
+  │  Local  │─────────────▶   GitHub Repository    |  ───▶│      ci.yml  (on: push: main)      |
   │  Commit │              │                       │    │                                      │
   └─────────┘              │  /.github/workflows/  │    │   TRACK A (build)  TRACK B (sec)     │
-                           │    ci.yml             │    │   ──────────────   ──────────────     │
+                           │    ci.yml             │    │   ──────────────   ──────────────    |
                            │    cd-k8s.yml         │    │   1. checkout      4. hadolint       │
                            │    cd.yml (EC2)       │    │   2. docker login  5. trivy image    │
                            │                       │    │   3. build-backend    (parallel,     │
