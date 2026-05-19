@@ -1,0 +1,4 @@
+kustomize:
+  images:
+  - heyyprakhar1/skillpulse-backend:sha-edea777
+  - heyyprakhar1/skillpulse-frontend:sha-ef1d89a
