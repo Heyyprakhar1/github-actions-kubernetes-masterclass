@@ -7,9 +7,9 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd-image-updater.argoproj.io/image-list: backend=heyyprakhar1/skillpulse-backend, frontend=heyyprakhar1/skillpulse-frontend
-    argocd-image-updater.argoproj.io/backend.update-strategy: digest
+    argocd-image-updater.argoproj.io/backend.update-strategy: name
     argocd-image-updater.argoproj.io/backend.allow-tags: regexp:^sha-
-    argocd-image-updater.argoproj.io/frontend.update-strategy: digest
+    argocd-image-updater.argoproj.io/frontend.update-strategy: name
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^sha-
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
