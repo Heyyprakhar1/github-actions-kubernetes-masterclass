@@ -1,4 +1,4 @@
-markdown# SkillPulse — GitOps CI/CD on Kubernetes
+## SkillPulse — GitOps CI/CD on Kubernetes
 
 SkillPulse is a three-tier web app for tracking skills and study hours.
 The app is intentionally small — the point is the infrastructure around it:
