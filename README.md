@@ -23,7 +23,6 @@ in under 90 seconds, with zero human intervention after that.
 | Infra | AWS EC2 t3.medium — ap-northeast-1 |
 
 ---
-
 ## Architecture
 
 git push (main)
@@ -54,7 +53,6 @@ Argo CD Image Updater
 polls DockerHub every 2 minutes
 detects new sha-* tag
 commits to k8s/overlays/dev/
-"build: automatic update of skillpulse"
 │
 ▼
 Argo CD v3.0.0
@@ -70,11 +68,9 @@ syncs automatically — prune + selfHeal
 │   mysql      StatefulSet + 1Gi PVC + init.sql           │
 │   HPA        backend 1→4 replicas at 80% CPU            │
 ──────────────────────────────────────────────────────────
-No kubectl in CI. No SSH. No cluster credentials in GitHub.
-The repo is the only source of truth —
-Image Updater commits, Argo CD syncs.
 
----
+No kubectl in CI. No SSH. No cluster credentials in GitHub.
+The repo is the only source of truth.
 
 ## CI pipeline
 
